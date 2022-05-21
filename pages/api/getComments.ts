@@ -1,8 +1,10 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { sanityClient } from '../../sanity'
+import { Comment } from '../../typings'
 import { groq } from 'next-sanity'
-import { sanityClient } from '../sanity'
-import { Comment } from '../typings'
+
+type Data = Comment[]
 
 const commentQuery = groq`
     *[_type == "comment" && references(*[_type == 'tweet' && _id == $tweetId]._id)]
@@ -11,8 +13,6 @@ const commentQuery = groq`
     ...
     } | order(_createdAt desc)
 `
-
-type Data = Comment[]
 
 export default async function handler(
   req: NextApiRequest,
